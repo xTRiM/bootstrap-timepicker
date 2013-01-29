@@ -174,7 +174,12 @@ describe('Keyboard events feature', function() {
     var $hourInput = tp2.$widget.find('input.bootstrap-timepicker-hour'),
         $minuteInput = tp2.$widget.find('input.bootstrap-timepicker-minute'),
         $secondInput = tp2.$widget.find('input.bootstrap-timepicker-second'),
-        $meridianInput = tp2.$widget.find('input.bootstrap-timepicker-meridian');
+        $meridianInput = tp2.$widget.find('input.bootstrap-timepicker-meridian'),
+        updated = 0;
+
+    $input2.on('update', function() {
+      updated++;
+    });
 
     $hourInput.autotype('{{back}}{{back}}2');
     $hourInput.trigger({
@@ -183,7 +188,7 @@ describe('Keyboard events feature', function() {
     });
 
     expect(tp2.getTime()).toBe('02:30:00 AM');
-
+    expect(updated).toBe(1);
 
     $minuteInput.autotype('{{back}}{{back}}0');
     $minuteInput.trigger({
@@ -192,6 +197,7 @@ describe('Keyboard events feature', function() {
     });
 
     expect(tp2.getTime()).toBe('02:00:00 AM');
+    expect(updated).toBe(2);
 
     $secondInput.autotype('{{back}}{{back}}30');
     $secondInput.trigger({
@@ -200,6 +206,7 @@ describe('Keyboard events feature', function() {
     });
 
     expect(tp2.getTime()).toBe('02:00:30 AM');
+    expect(updated).toBe(3);
 
     $meridianInput.autotype('{{back}}{{back}}p');
     $meridianInput.trigger({
@@ -208,5 +215,6 @@ describe('Keyboard events feature', function() {
     });
 
     expect(tp2.getTime()).toBe('02:00:30 PM');
+    expect(updated).toBe(4);
   });
 });

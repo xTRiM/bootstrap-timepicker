@@ -160,4 +160,23 @@ describe('Mouse events feature', function() {
       var meridian1 = window.getSelection().toString();
       expect(meridian1).toBe('AM');
   });
+
+  it('should throw update event on button click', function() {
+    var updated = 0;
+    $input2.on('update', function() {
+      updated++;
+    });
+    tp2.$widget.find('a[data-action="incrementHour"]').trigger('click');
+
+    expect(updated).toBe(1);
+
+    tp2.$widget.find('a[data-action="incrementMinute"]').trigger('click');
+
+    expect(updated).toBe(2);
+
+    tp2.$widget.find('a[data-action="toggleMeridian"]').last().trigger('click');
+
+    expect(updated).toBe(3);
+  });
+
 });

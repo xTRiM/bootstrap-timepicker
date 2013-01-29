@@ -628,8 +628,70 @@
 
     toggleMeridian: function() {
       this.meridian = this.meridian === 'AM' ? 'PM' : 'AM';
+    },
 
-      this.update();
+    update: function() {
+      this.updateElement();
+      this.updateWidget();
+    },
+
+    updateElement: function() {
+      var time = this.getTime();
+
+      this.$element.val(time).trigger('update');
+
+      switch (this.highlightedUnit) {
+        case 'hour':
+          this.highlightHour();
+        break;
+        case 'minute':
+          this.highlightMinute();
+        break;
+        case 'second':
+          this.highlightSecond();
+        break;
+        case 'meridian':
+          this.highlightMeridian();
+        break;
+      }
+    },
+
+    updateFromElementVal: function() {
+      var time = this.$element.val();
+      if (time) {
+        this.setValues(time);
+        this.updateWidget();
+      }
+    },
+
+    updateWidget: function() {
+      if (this.showInputs) {
+        this.$widget.find('input.bootstrap-timepicker-hour').val(this.hour < 10 ? '0' + this.hour : this.hour);
+        this.$widget.find('input.bootstrap-timepicker-minute').val(this.minute < 10 ? '0' + this.minute : this.minute);
+        if (this.showSeconds) {
+          this.$widget.find('input.bootstrap-timepicker-second').val(this.second < 10 ? '0' + this.second : this.second);
+        }
+        if (this.showMeridian) {
+          this.$widget.find('input.bootstrap-timepicker-meridian').val(this.meridian);
+        }
+      } else {
+        this.$widget.find('span.bootstrap-timepicker-hour').text(this.hour);
+        this.$widget.find('span.bootstrap-timepicker-minute').text(this.minute < 10 ? '0' + this.minute : this.minute);
+        if (this.showSeconds) {
+          this.$widget.find('span.bootstrap-timepicker-second').text(this.second < 10 ? '0' + this.second : this.second);
+        }
+        if (this.showMeridian) {
+          this.$widget.find('span.bootstrap-timepicker-meridian').text(this.meridian);
+        }
+      }
+    },
+
+    updateFromWidgetInputs: function() {
+      var time = $('input.bootstrap-timepicker-hour', this.$widget).val() + ':' +
+        $('input.bootstrap-timepicker-minute', this.$widget).val() +
+        (this.showSeconds ? ':' + $('input.bootstrap-timepicker-second', this.$widget).val() : '') +
+        (this.showMeridian ? ' ' + $('input.bootstrap-timepicker-meridian', this.$widget).val() : '');
+      this.setValues(time);
     },
 
     widgetClick: function(e) {
@@ -704,70 +766,6 @@
           this.update();
         break;
       }
-    },
-
-    update: function() {
-      this.updateElement();
-      this.updateWidget();
-    },
-
-    updateElement: function() {
-      var time = this.getTime();
-
-      this.$element.val(time).change();
-
-      switch (this.highlightedUnit) {
-        case 'hour':
-          this.highlightHour();
-        break;
-        case 'minute':
-          this.highlightMinute();
-        break;
-        case 'second':
-          this.highlightSecond();
-        break;
-        case 'meridian':
-          this.highlightMeridian();
-        break;
-      }
-    },
-
-    updateFromElementVal: function() {
-      var time = this.$element.val();
-      if (time) {
-        this.setValues(time);
-        this.updateWidget();
-      }
-    },
-
-    updateWidget: function() {
-      if (this.showInputs) {
-        this.$widget.find('input.bootstrap-timepicker-hour').val(this.hour < 10 ? '0' + this.hour : this.hour);
-        this.$widget.find('input.bootstrap-timepicker-minute').val(this.minute < 10 ? '0' + this.minute : this.minute);
-        if (this.showSeconds) {
-          this.$widget.find('input.bootstrap-timepicker-second').val(this.second < 10 ? '0' + this.second : this.second);
-        }
-        if (this.showMeridian) {
-          this.$widget.find('input.bootstrap-timepicker-meridian').val(this.meridian);
-        }
-      } else {
-        this.$widget.find('span.bootstrap-timepicker-hour').text(this.hour);
-        this.$widget.find('span.bootstrap-timepicker-minute').text(this.minute < 10 ? '0' + this.minute : this.minute);
-        if (this.showSeconds) {
-          this.$widget.find('span.bootstrap-timepicker-second').text(this.second < 10 ? '0' + this.second : this.second);
-        }
-        if (this.showMeridian) {
-          this.$widget.find('span.bootstrap-timepicker-meridian').text(this.meridian);
-        }
-      }
-    },
-
-    updateFromWidgetInputs: function() {
-      var time = $('input.bootstrap-timepicker-hour', this.$widget).val() + ':' +
-             $('input.bootstrap-timepicker-minute', this.$widget).val() +
-             (this.showSeconds ? ':' + $('input.bootstrap-timepicker-second', this.$widget).val() : '') +
-             (this.showMeridian ? ' ' + $('input.bootstrap-timepicker-meridian', this.$widget).val() : '');
-      this.setValues(time);
     }
   };
 
